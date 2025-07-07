@@ -1,0 +1,18 @@
+- name: Configure static IP for eth0
+  become: true
+  blockinfile:
+    path: /etc/dhcpcd.conf
+    marker: "# {mark} ANSIBLE eth0 config"
+    block: |
+      interface eth0
+      static ip_address=192.168.3.1/30
+      nohook wpa_supplicant
+  notify: Restart dhcpcd
+
+- name: Ensure dhcpcd service is enabled
+  become: true
+  service:
+    name: dhcpcd
+    enabled: true
+    state: started
+

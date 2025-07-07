@@ -1,0 +1,22 @@
+- name: Install CUPS packages
+  become: true
+  apt:
+    name:
+      - cups
+      - cups-bsd
+    state: present
+
+- name: Ensure CUPS service is enabled
+  become: true
+  service:
+    name: cups
+    enabled: true
+    state: started
+
+- name: Add printer queue
+  become: true
+  command: >-
+    lpadmin -p HL3170CDW -E -v socket://192.168.3.2 -m everywhere
+  args:
+    creates: /etc/cups/ppd/HL3170CDW.ppd
+  notify: Restart cups

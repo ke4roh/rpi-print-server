@@ -1,0 +1,21 @@
+- name: Install avahi-daemon
+  become: true
+  apt:
+    name: avahi-daemon
+    state: present
+
+- name: Deploy AirPrint service file
+  become: true
+  template:
+    src: airprint.service.j2
+    dest: /etc/avahi/services/airprint.service
+    mode: '0644'
+  notify: Restart avahi-daemon
+
+- name: Ensure avahi-daemon is enabled
+  become: true
+  service:
+    name: avahi-daemon
+    enabled: true
+    state: started
+
