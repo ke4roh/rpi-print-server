@@ -4,7 +4,7 @@ This repository contains an Ansible playbook to configure a Raspberry Pi 2 Model
 
 ## Features
 
-- Static IP configuration for the printer network
+- Static IP configuration for the printer network via systemd-networkd
 - Minimal DHCP service using dnsmasq
 - CUPS setup with a shared queue
 - Samba sharing for Windows clients
