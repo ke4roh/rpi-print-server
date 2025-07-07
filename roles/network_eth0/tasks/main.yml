@@ -1,25 +1,15 @@
-- name: Install dhcpcd
+- name: Deploy static IP configuration for eth0
   become: true
-  apt:
-    name: dhcpcd5
-    state: present
+  template:
+    src: eth0.network.j2
+    dest: /etc/systemd/network/eth0.network
+    mode: '0644'
+  notify: Restart systemd-networkd
 
-- name: Configure static IP for eth0
-  become: true
-  blockinfile:
-    path: /etc/dhcpcd.conf
-    create: yes
-    marker: "# {mark} ANSIBLE eth0 config"
-    block: |
-      interface eth0
-      static ip_address=192.168.3.1/30
-      nohook wpa_supplicant
-  notify: Restart dhcpcd
-
-- name: Ensure dhcpcd service is enabled
+- name: Ensure systemd-networkd service is enabled
   become: true
   service:
-    name: dhcpcd
+    name: systemd-networkd
     enabled: true
     state: started
 

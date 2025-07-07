@@ -1,5 +1,5 @@
-- name: Restart dhcpcd
+- name: Restart systemd-networkd
   become: true
   service:
-    name: dhcpcd
+    name: systemd-networkd
     state: restarted
