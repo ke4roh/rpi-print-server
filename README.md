@@ -24,7 +24,7 @@ ansible-playbook -i inventory site.yml
 Download the packaged installer from the latest release and run it directly on the Pi:
 
 ```bash
-curl -L https://github.com/ke4roh/rpi-print-server/releases/download/r1/printserver-install-1.run | bash
+curl -L https://github.com/ke4roh/rpi-print-server/releases/download/r1.1/printserver-install-1.1.run | bash
 ```
 
 The roles assume the printer will be reachable at `192.168.3.2` on the private subnet.
