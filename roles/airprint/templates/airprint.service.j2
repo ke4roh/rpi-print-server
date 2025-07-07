@@ -1,0 +1,19 @@
+<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+  <name replace-wildcards="yes">Brother HL3170CDW</name>
+  <service>
+    <type>_ipp._tcp</type>
+    <subtype>_universal._sub._ipp._tcp</subtype>
+    <port>631</port>
+    <txt-record>txtvers=1</txt-record>
+    <txt-record>qtotal=1</txt-record>
+    <txt-record>rp=printers/HL3170CDW</txt-record>
+    <txt-record>ty=Brother HL3170CDW</txt-record>
+    <txt-record>adminurl=http://192.168.3.1:631/printers/HL3170CDW</txt-record>
+    <txt-record>note=Raspberry Pi Print Server</txt-record>
+    <txt-record>product=(Brother HL3170CDW)</txt-record>
+    <txt-record>printer-state=3</txt-record>
+    <txt-record>papermax=legal-A4</txt-record>
+  </service>
+</service-group>

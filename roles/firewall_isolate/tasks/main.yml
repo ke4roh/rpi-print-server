@@ -1,0 +1,24 @@
+- name: Install iptables-persistent
+  become: true
+  apt:
+    name: iptables-persistent
+    state: present
+    debconf:
+      "iptables-persistent/autosave_v4": "boolean true"
+      "iptables-persistent/autosave_v6": "boolean true"
+
+- name: Deploy firewall rules
+  become: true
+  template:
+    src: rules.v4.j2
+    dest: /etc/iptables/rules.v4
+    mode: '0644'
+  notify: Reload iptables
+
+- name: Ensure net.ipv4.ip_forward is disabled
+  become: true
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '0'
+    state: present
+    reload: yes

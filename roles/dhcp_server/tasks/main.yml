@@ -1,0 +1,21 @@
+- name: Install dnsmasq
+  become: true
+  apt:
+    name: dnsmasq
+    state: present
+
+- name: Deploy dnsmasq configuration
+  become: true
+  template:
+    src: dnsmasq.conf.j2
+    dest: /etc/dnsmasq.d/printer.conf
+    mode: '0644'
+  notify: Restart dnsmasq
+
+- name: Ensure dnsmasq is enabled and started
+  become: true
+  service:
+    name: dnsmasq
+    enabled: true
+    state: started
+

@@ -1,0 +1,20 @@
+- name: Install Samba
+  become: true
+  apt:
+    name: samba
+    state: present
+
+- name: Deploy smb.conf
+  become: true
+  template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    mode: '0644'
+  notify: Restart smbd
+
+- name: Ensure smbd service is enabled
+  become: true
+  service:
+    name: smbd
+    enabled: true
+    state: started

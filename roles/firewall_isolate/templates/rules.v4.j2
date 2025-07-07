@@ -1,0 +1,7 @@
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+-A FORWARD -i eth0 -o wlan0 -j REJECT
+-A FORWARD -i wlan0 -o eth0 -j REJECT
+COMMIT

@@ -1,0 +1,12 @@
+[global]
+   printing = cups
+   printcap name = cups
+   load printers = yes
+   disable spoolss = yes
+
+[printers]
+   comment = All Printers
+   path = /var/spool/samba
+   printable = yes
+   browseable = no
+   guest ok = yes
