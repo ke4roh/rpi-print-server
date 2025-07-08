@@ -1,40 +1,73 @@
-- name: Install Brother HL3170CDW CUPS wrapper script
-  become: true
+---
+- name: Build brcupsconfpt1
+  make:
+    chdir: "{{ role_path }}/files/brcupsconfig"
+
+- name: Install brcupsconfpt1
   copy:
-    src: cupswrapperhl3170cdw
-    dest: /usr/lib/cups/filter/brother_lpdwrapper_hl3170cdw
+    src: "{{ role_path }}/files/brcupsconfig/brcupsconfpt1"
+    dest: /opt/brother/Printers/hl3170cdw/cupswrapper/brcupsconfpt1
     mode: '0755'
 
-- name: Copy Brother HL3170CDW PPD to system
-  become: true
+- name: Ensure necessary directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - /usr/share/ppd/Brother
+    - /usr/lib/cups/filter
+
+- name: Install CUPS and generic printer drivers
+  apt:
+    name:
+      - cups
+      - cups-bsd
+      - printer-driver-brlaser
+      - printer-driver-gutenprint
+    state: present
+    update_cache: yes
+
+- name: Ensure CUPS service is enabled and started
+  service:
+    name: cups
+    enabled: true
+    state: started
+
+- name: Copy Brother HL-3170CDW PPD file
   copy:
-    src: HL3170CDW.ppd
-    dest: "{{ printer_ppd_dest }}"
+    src: files/brother_hl3170cdw_printer_en.ppd
+    dest: /usr/share/ppd/Brother/brother_hl3170cdw_printer_en.ppd
     owner: root
     group: root
     mode: '0644'
 
+- name: Install Brother HL-3170CDW CUPS filter script
+  template:
+    src: cupswrapperhl3170cdw.j2
+    dest: /usr/lib/cups/filter/brother_lpdwrapper_{{ printer_model }}
+    owner: root
+    group: root
+    mode: '0755'
+
 - name: Detect USB printer URI
-  become: true
   command: lpinfo -v
   register: lpinfo_output
+  changed_when: false
 
-- name: Set USB printer URI
+- name: Set USB printer URI fact
   set_fact:
-    printer_usb_uri: >-
-      {{ lpinfo_output.stdout_lines | select('match', '^direct usb://') | list | first | regex_replace('^direct ', '') }}
+    printer_usb_uri: "{{ lpinfo_output.stdout_lines | select('match', '^direct usb://Brother/HL-3170CDW') | list | first | regex_replace('^direct ', '') }}"
 
-- name: Register HL3170CDW printer
-  become: true
+- name: Add USB printer queue using Brother PPD
   command: >-
-    lpadmin -p {{ printer_name }} -E
-    -v {{ printer_usb_uri }}
-    -P {{ printer_ppd_dest }}
+    lpadmin -p HL3170CDW -E -v {{ printer_usb_uri }} -P /usr/share/ppd/Brother/brother_hl3170cdw_printer_en.ppd
   args:
-    creates: "/etc/cups/ppd/{{ printer_name }}.ppd"
+    creates: /etc/cups/ppd/HL3170CDW.ppd
   notify: Restart cups
 
 - name: Enable printer sharing
-  become: true
   command: cupsctl --share-printers
   notify: Restart cups
