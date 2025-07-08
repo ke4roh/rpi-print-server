@@ -21,7 +21,11 @@ kh="/home/pi/.ssh/known_hosts"
 makeFileWithMode $kh 600
 grep -q localhost $kh || ssh-keyscan localhost >>$kh
 
-# install Ansible
+# refresh package lists and upgrade base system
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+# install Ansible if not already present
 sudo dpkg -s ansible 2>&1 >/dev/null || sudo apt-get install -y ansible
 
 ansible-playbook site.yml -i hosts-localhost -u pi

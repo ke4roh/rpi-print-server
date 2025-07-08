@@ -7,6 +7,5 @@
     - network_eth0
     - dhcp_server
     - cups_setup
-    - samba_share
     - airprint
     - firewall_isolate

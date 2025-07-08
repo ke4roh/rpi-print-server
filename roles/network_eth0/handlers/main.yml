@@ -3,3 +3,9 @@
   service:
     name: systemd-networkd
     state: restarted
+
+- name: Restart dhcpcd
+  become: true
+  service:
+    name: dhcpcd
+    state: restarted
