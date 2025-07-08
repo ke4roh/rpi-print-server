@@ -1,15 +1,13 @@
 # rpi-print-server
 
-This repository contains an Ansible playbook to configure a Raspberry Pi 2 Model B as a print server for a Brother HL3170CDW printer. The Pi uses Wi-Fi (`wlan0`) to receive print jobs from the LAN and connects to the printer over an isolated Ethernet network (`eth0`).
+This repository contains an Ansible playbook to configure a Raspberry Pi 2 Model B as a print server for a Brother HL3170CDW printer. The Pi receives print jobs over the network and connects to the printer via USB.
 
 ## Features
 
-- Static IP configuration for the printer network via systemd-networkd
-- Minimal DHCP service using dnsmasq
-- CUPS setup with a shared queue
+- CUPS setup with a shared queue for a USB-connected printer
+- Printer drivers installed automatically (brlaser with Gutenprint fallback)
 - Samba sharing for Windows clients
 - AirPrint advertisement via Avahi
-- Optional firewall rules to prevent forwarding between `wlan0` and `eth0`
 
 ## Usage
 
@@ -26,5 +24,3 @@ Download the packaged installer from the latest release and run it directly on t
 ```bash
 curl -L https://github.com/ke4roh/rpi-print-server/releases/download/r1.1/printserver-install-1.1.run | bash
 ```
-
-The roles assume the printer will be reachable at `192.168.3.2` on the private subnet.
