@@ -9,3 +9,4 @@
   service:
     name: dhcpcd
     state: restarted
+  when: "'dhcpcd.service' in ansible_facts.services"
