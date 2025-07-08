@@ -13,6 +13,14 @@
     enabled: true
     state: started
 
+- name: Deploy cupsd configuration for IPP sharing
+  become: true
+  template:
+    src: cupsd.conf.j2
+    dest: /etc/cups/cupsd.conf
+    mode: '0644'
+  notify: Restart cups
+
 - name: Discover printer via ippfind
   command: ippfind
   register: ipp_discovery
