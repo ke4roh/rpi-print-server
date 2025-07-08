@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 - name: Install Brother HL3170CDW CUPS wrapper script
   become: true
   copy:
@@ -7,6 +8,48 @@
 
 - name: Copy Brother HL3170CDW PPD to system
   become: true
+=======
+---
+- name: Build brcupsconfpt1
+  make:
+    chdir: "{{ role_path }}/files/brcupsconfig"
+
+- name: Ensure directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - /opt/brother/Printers/hl3170cdw/cupswrapper
+    - /usr/share/ppd/Brother
+    - /usr/lib/cups/filter
+
+- name: Install brcupsconfpt1
+  copy:
+    src: "{{ role_path }}/files/brcupsconfig/brcupsconfpt1"
+    dest: /opt/brother/Printers/hl3170cdw/cupswrapper/brcupsconfpt1
+    mode: '0755'
+
+- name: Install CUPS and generic printer drivers
+  apt:
+    name:
+      - cups
+      - cups-bsd
+      - printer-driver-brlaser
+      - printer-driver-gutenprint
+    state: present
+    update_cache: yes
+
+- name: Ensure CUPS service is enabled and started
+  service:
+    name: cups
+    enabled: true
+    state: started
+
+- name: Copy Brother HL-3170CDW PPD file
+>>>>>>> Stashed changes
   copy:
     src: HL3170CDW.ppd
     dest: "{{ printer_ppd_dest }}"
