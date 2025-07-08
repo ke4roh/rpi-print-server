@@ -1,3 +1,10 @@
+- name: Install Brother HL3170CDW CUPS wrapper script
+  become: true
+  copy:
+    src: cupswrapperhl3170cdw
+    dest: /usr/lib/cups/filter/brother_lpdwrapper_hl3170cdw
+    mode: '0755'
+
 - name: Copy Brother HL3170CDW PPD to system
   become: true
   copy:
