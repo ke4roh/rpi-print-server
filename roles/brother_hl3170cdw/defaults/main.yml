@@ -1,2 +1,4 @@
 printer_name: HL3170CDW
+printer_model: hl3170cdw
+device_model: Printers
 printer_ppd_dest: "/usr/share/ppd/HL3170CDW.ppd"

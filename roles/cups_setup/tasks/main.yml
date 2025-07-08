@@ -8,6 +8,15 @@
       - printer-driver-gutenprint
     state: present
 
+- name: Copy cupsd.conf
+  copy:
+    src: cupsd.conf
+    dest: /etc/cups/cupsd.conf
+    owner: root
+    group: lp
+    mode: '0640'
+  notify: Restart CUPS
+
 - name: Ensure CUPS service is enabled
   become: true
   service:
