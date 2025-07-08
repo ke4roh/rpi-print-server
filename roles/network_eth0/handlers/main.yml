@@ -3,3 +3,10 @@
   service:
     name: systemd-networkd
     state: restarted
+
+- name: Restart dhcpcd
+  become: true
+  service:
+    name: dhcpcd
+    state: restarted
+  when: "'dhcpcd.service' in ansible_facts.services"

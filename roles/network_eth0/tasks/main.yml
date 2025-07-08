@@ -1,3 +1,26 @@
+- name: Gather service facts
+  service_facts:
+
+- name: Remove previous eth0 configuration from dhcpcd
+  become: true
+  when: "'dhcpcd.service' in ansible_facts.services"
+  blockinfile:
+    path: /etc/dhcpcd.conf
+    marker: "# {mark} ANSIBLE eth0 config"
+    state: absent
+    create: yes
+  notify: Restart dhcpcd
+
+- name: Prevent dhcpcd from managing eth0
+  become: true
+  when: "'dhcpcd.service' in ansible_facts.services"
+  lineinfile:
+    path: /etc/dhcpcd.conf
+    regexp: '^denyinterfaces eth0'
+    line: 'denyinterfaces eth0'
+    create: yes
+  notify: Restart dhcpcd
+
 - name: Deploy static IP configuration for eth0
   become: true
   template:

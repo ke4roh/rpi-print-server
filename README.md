@@ -7,7 +7,7 @@ This repository contains an Ansible playbook to configure a Raspberry Pi 2 Model
 - Static IP configuration for the printer network via systemd-networkd
 - Minimal DHCP service using dnsmasq
 - CUPS setup with a shared queue
-- Samba sharing for Windows clients
+- IPP printer sharing for Windows clients
 - AirPrint advertisement via Avahi
 - Optional firewall rules to prevent forwarding between `wlan0` and `eth0`
 
@@ -26,6 +26,10 @@ Download the packaged installer from the latest release and run it directly on t
 ```bash
 curl -L https://github.com/ke4roh/rpi-print-server/releases/download/r1.1/printserver-install-1.1.run | bash
 ```
+
+The installer will update system packages and install Ansible before running
+the playbook. It also configures `dhcpcd` to ignore `eth0` so that
+`systemd-networkd` can manage the isolated printer network.
 
 The roles assume the printer will be reachable at `192.168.3.2` on the private subnet.
 

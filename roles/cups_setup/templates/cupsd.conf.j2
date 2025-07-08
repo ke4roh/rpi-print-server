@@ -1,0 +1,19 @@
+# CUPS configuration for network printing via IPP
+LogLevel warn
+Listen 0.0.0.0:631
+Listen /run/cups/cups.sock
+Browsing On
+BrowseLocalProtocols dnssd
+DefaultAuthType Basic
+WebInterface Yes
+DefaultShared Yes
+
+<Location />
+  Order allow,deny
+  Allow @LOCAL
+</Location>
+
+<Location /admin>
+  Order allow,deny
+  Allow localhost
+</Location>
