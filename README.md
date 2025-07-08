@@ -28,3 +28,11 @@ curl -L https://github.com/ke4roh/rpi-print-server/releases/download/r1.1/prints
 ```
 
 The roles assume the printer will be reachable at `192.168.3.2` on the private subnet.
+
+## Networking tips
+
+Connect the printer to the Pi's `eth0` interface with an Ethernet crossover cable.
+A regular patch cable will show a link light but traffic will not pass.
+If the printer has previously been configured, reset its network settings and
+run the auto configuration routine.  After doing so with a crossover cable in
+place, the private network should come up immediately.

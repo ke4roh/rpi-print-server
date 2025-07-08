@@ -1,11 +1,24 @@
+- name: Preseed iptables-persistent IPv4 autosave
+  become: true
+  debconf:
+    name: iptables-persistent
+    question: iptables-persistent/autosave_v4
+    value: "true"
+    vtype: boolean
+
+- name: Preseed iptables-persistent IPv6 autosave
+  become: true
+  debconf:
+    name: iptables-persistent
+    question: iptables-persistent/autosave_v6
+    value: "true"
+    vtype: boolean
+
 - name: Install iptables-persistent
   become: true
   apt:
     name: iptables-persistent
     state: present
-    debconf:
-      "iptables-persistent/autosave_v4": "boolean true"
-      "iptables-persistent/autosave_v6": "boolean true"
 
 - name: Deploy firewall rules
   become: true
