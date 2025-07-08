@@ -13,10 +13,23 @@
     enabled: true
     state: started
 
-- name: Add printer queue
-  become: true
-  command: >-
-    lpadmin -p HL3170CDW -E -v socket://192.168.3.2 -m everywhere
-  args:
-    creates: /etc/cups/ppd/HL3170CDW.ppd
+- name: Discover printer via ippfind
+  command: ippfind
+  register: ipp_discovery
+  changed_when: false
+
+- name: Set IPP URI (assuming only one on that subnet)
+  set_fact:
+    printer_uri: "{{ ipp_discovery.stdout_lines[0] }}"
+
+- name: Check if {{ printer_name }} printer is already configured
+  command: lpstat -v {{ printer_name }}
+  register: printer_exists
+  ignore_errors: true
+  changed_when: false
+
+- name: Add IPP Everywhere printer using discovered URI
+  when: printer_exists.rc != 0
+  command: >
+    lpadmin -p {{ printer_name }} -E -v {{ printer_uri }} -m everywhere
   notify: Restart cups

@@ -1,6 +1,8 @@
 ---
 - hosts: printserver
   become: true
+  vars:
+    printer_name: "HL3170CDW"
   roles:
     - network_eth0
     - dhcp_server
