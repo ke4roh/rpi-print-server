@@ -1,9 +1,11 @@
-- name: Install CUPS packages
+- name: Install CUPS packages and drivers
   become: true
   apt:
     name:
       - cups
       - cups-bsd
+      - printer-driver-brlaser
+      - printer-driver-gutenprint
     state: present
 
 - name: Ensure CUPS service is enabled
@@ -13,10 +15,24 @@
     enabled: true
     state: started
 
-- name: Add printer queue
+- name: Detect USB printer URI
+  become: true
+  command: lpinfo -v
+  register: lpinfo_output
+
+- name: Set USB printer URI
+  set_fact:
+    printer_usb_uri: "{{ lpinfo_output.stdout_lines | select('match', '^direct usb://') | list | first | regex_replace('^direct ', '') }}"
+
+- name: Add USB printer queue
   become: true
   command: >-
-    lpadmin -p HL3170CDW -E -v socket://192.168.3.2 -m everywhere
+    lpadmin -p HL3170CDW -E -v {{ printer_usb_uri }} -m drv:///brlaser.drv/brlaser.ppd
   args:
     creates: /etc/cups/ppd/HL3170CDW.ppd
+  notify: Restart cups
+
+- name: Enable printer sharing
+  become: true
+  command: cupsctl --share-printers
   notify: Restart cups
