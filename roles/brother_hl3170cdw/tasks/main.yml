@@ -1,0 +1,33 @@
+- name: Copy Brother HL3170CDW PPD to system
+  become: true
+  copy:
+    src: HL3170CDW.ppd
+    dest: "{{ printer_ppd_dest }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Detect USB printer URI
+  become: true
+  command: lpinfo -v
+  register: lpinfo_output
+
+- name: Set USB printer URI
+  set_fact:
+    printer_usb_uri: >-
+      {{ lpinfo_output.stdout_lines | select('match', '^direct usb://') | list | first | regex_replace('^direct ', '') }}
+
+- name: Register HL3170CDW printer
+  become: true
+  command: >-
+    lpadmin -p {{ printer_name }} -E
+    -v {{ printer_usb_uri }}
+    -P {{ printer_ppd_dest }}
+  args:
+    creates: "/etc/cups/ppd/{{ printer_name }}.ppd"
+  notify: Restart cups
+
+- name: Enable printer sharing
+  become: true
+  command: cupsctl --share-printers
+  notify: Restart cups

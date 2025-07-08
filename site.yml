@@ -3,5 +3,6 @@
   become: true
   roles:
     - cups_setup
+    - brother_hl3170cdw
     - samba_share
     - airprint
